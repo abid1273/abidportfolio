@@ -84,14 +84,14 @@ const SkillsSection = () => {
   }, []);
 
   return (
-    <section id="skills" ref={sectionRef} className="py-24 bg-secondary/30 relative overflow-hidden">
+    <section id="skills" ref={sectionRef} className="py-24 bg-card relative overflow-hidden bg-diagonal-lines">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary text-primary text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-background text-primary text-sm font-medium mb-4 border border-border">
             Technical Expertise
           </span>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -107,7 +107,7 @@ const SkillsSection = () => {
           {skillCategories.map((category, index) => (
             <div 
               key={index}
-              className="reveal p-6 rounded-2xl bg-gradient-card border border-border hover-lift group"
+              className="reveal p-6 rounded-2xl bg-background border border-border hover-lift group shadow-card"
               style={{ transitionDelay: `${index * 0.1}s` }}
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
@@ -118,7 +118,7 @@ const SkillsSection = () => {
                 {category.skills.map((skill, i) => (
                   <span 
                     key={i}
-                    className="px-3 py-1 text-sm bg-secondary rounded-full text-muted-foreground"
+                    className="px-3 py-1 text-sm bg-card rounded-full text-muted-foreground border border-border"
                   >
                     {skill}
                   </span>
@@ -143,7 +143,7 @@ const SkillsSection = () => {
                 </div>
                 <div className="h-2 bg-secondary rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-gold rounded-full transition-all duration-1000 ease-out"
+                    className="h-full bg-gradient-primary rounded-full transition-all duration-1000 ease-out"
                     style={{ 
                       width: `${skill.level}%`,
                       transitionDelay: `${index * 0.1}s`
@@ -162,7 +162,7 @@ const SkillsSection = () => {
             {["Shopify", "Webflow", "GHL", "Automation", "GTM", "PSD to WordPress", "Figma to WordPress"].map((skill, index) => (
               <span 
                 key={index}
-                className="px-4 py-2 rounded-full bg-gradient-card border border-border text-foreground hover:border-primary transition-colors cursor-default"
+                className="px-4 py-2 rounded-full bg-background border border-border text-foreground hover:border-primary transition-colors cursor-default shadow-sm"
               >
                 {skill}
               </span>

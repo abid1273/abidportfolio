@@ -3,7 +3,7 @@ import SocialLinks from "./SocialLinks";
 
 const Footer = () => {
   return (
-    <footer className="py-12 bg-card border-t border-border">
+    <footer className="py-12 bg-background border-t border-border">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="flex flex-col items-center md:items-start gap-3">

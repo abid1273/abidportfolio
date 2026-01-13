@@ -69,9 +69,7 @@ const PortfolioSection = () => {
   }, []);
 
   return (
-    <section id="portfolio" ref={sectionRef} className="py-24 bg-background relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-card/50 to-transparent pointer-events-none" />
-      
+    <section id="portfolio" ref={sectionRef} className="py-24 bg-card relative bg-wave-lines">
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <span className="reveal text-primary font-semibold tracking-wider uppercase text-sm">
@@ -89,7 +87,7 @@ const PortfolioSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className="reveal group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-glow"
+              className="reveal group relative bg-background rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 shadow-card hover:shadow-warm"
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="relative h-48 overflow-hidden">
@@ -98,8 +96,8 @@ const PortfolioSection = () => {
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-                <span className="absolute top-4 left-4 px-3 py-1 bg-primary/20 backdrop-blur-sm text-primary text-xs font-semibold rounded-full border border-primary/30">
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+                <span className="absolute top-4 left-4 px-3 py-1 bg-primary/90 backdrop-blur-sm text-primary-foreground text-xs font-semibold rounded-full">
                   {project.category}
                 </span>
               </div>
@@ -116,7 +114,7 @@ const PortfolioSection = () => {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md"
+                      className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
                     >
                       {tag}
                     </span>
