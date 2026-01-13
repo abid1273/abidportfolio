@@ -54,11 +54,11 @@ const ExperienceSection = () => {
   }, []);
 
   return (
-    <section id="experience" ref={sectionRef} className="py-24 bg-background relative">
-      <div className="container mx-auto px-6">
+    <section id="experience" ref={sectionRef} className="py-24 bg-background relative bg-lines">
+      <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary text-primary text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-card text-primary text-sm font-medium mb-4 border border-border">
             Career Journey
           </span>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -83,11 +83,11 @@ const ExperienceSection = () => {
               style={{ transitionDelay: `${index * 0.2}s` }}
             >
               {/* Timeline dot */}
-              <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full md:-translate-x-1/2 shadow-gold z-10" />
+              <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full md:-translate-x-1/2 shadow-warm z-10" />
               
               {/* Content */}
               <div className={`ml-8 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-12" : "md:pl-12"}`}>
-                <div className="p-6 rounded-2xl bg-gradient-card border border-border hover-lift group">
+                <div className="p-6 rounded-2xl bg-card border border-border hover-lift group shadow-card">
                   <div className="flex items-center gap-2 text-primary mb-2">
                     <Building2 className="w-4 h-4" />
                     <span className="font-semibold">{exp.company}</span>
@@ -122,7 +122,7 @@ const ExperienceSection = () => {
 
         {/* Education */}
         <div className="reveal max-w-4xl mx-auto mt-16">
-          <div className="p-8 rounded-2xl bg-gradient-card border border-border">
+          <div className="p-8 rounded-2xl bg-card border border-border shadow-card">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <span className="text-primary font-medium">Education</span>

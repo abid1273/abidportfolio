@@ -15,6 +15,7 @@ const Navigation = () => {
 
   const navItems = [
     { label: "About", href: "#about" },
+    { label: "Upwork", href: "#upwork" },
     { label: "Experience", href: "#experience" },
     { label: "Skills", href: "#skills" },
     { label: "Contact", href: "#contact" },
@@ -24,7 +25,7 @@ const Navigation = () => {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? "bg-background/80 backdrop-blur-lg border-b border-border" 
+          ? "bg-background/90 backdrop-blur-lg border-b border-border shadow-sm" 
           : "bg-transparent"
       }`}
     >
@@ -52,7 +53,7 @@ const Navigation = () => {
             ))}
             <a 
               href="#contact"
-              className="px-5 py-2.5 bg-gradient-gold rounded-lg font-medium text-primary-foreground hover-glow transition-all duration-300"
+              className="px-5 py-2.5 bg-gradient-primary rounded-lg font-medium text-primary-foreground hover-glow transition-all duration-300 shadow-warm"
             >
               Hire Me
             </a>
@@ -86,7 +87,7 @@ const Navigation = () => {
             ))}
             <a 
               href="#contact"
-              className="block w-full text-center px-5 py-3 bg-gradient-gold rounded-lg font-medium text-primary-foreground"
+              className="block w-full text-center px-5 py-3 bg-gradient-primary rounded-lg font-medium text-primary-foreground"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Hire Me

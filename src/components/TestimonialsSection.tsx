@@ -89,7 +89,7 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section id="testimonials" ref={sectionRef} className="py-24 bg-card relative overflow-hidden">
+    <section id="testimonials" ref={sectionRef} className="py-24 bg-background relative overflow-hidden bg-dots">
       {/* Background decoration */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
@@ -110,7 +110,7 @@ const TestimonialsSection = () => {
         <div className="reveal max-w-4xl mx-auto">
           <div className="relative">
             {/* Main testimonial card */}
-            <div className="bg-background rounded-3xl p-8 md:p-12 border border-border shadow-elegant relative">
+            <div className="bg-card rounded-3xl p-8 md:p-12 border border-border shadow-card relative">
               <Quote className="absolute top-8 right-8 w-16 h-16 text-primary/10" />
 
               <div className="flex items-center gap-4 mb-6">
@@ -176,22 +176,6 @@ const TestimonialsSection = () => {
                   }`}
                 />
               ))}
-            </div>
-          </div>
-
-          {/* Upwork stats */}
-          <div className="reveal mt-12 flex flex-wrap justify-center gap-8 text-center">
-            <div className="px-6 py-4 bg-background rounded-2xl border border-border">
-              <div className="text-3xl font-bold text-gradient">100%</div>
-              <div className="text-sm text-muted-foreground">Job Success</div>
-            </div>
-            <div className="px-6 py-4 bg-background rounded-2xl border border-border">
-              <div className="text-3xl font-bold text-gradient">Top Rated</div>
-              <div className="text-sm text-muted-foreground">Upwork Status</div>
-            </div>
-            <div className="px-6 py-4 bg-background rounded-2xl border border-border">
-              <div className="text-3xl font-bold text-gradient">5.0</div>
-              <div className="text-sm text-muted-foreground">Average Rating</div>
             </div>
           </div>
         </div>

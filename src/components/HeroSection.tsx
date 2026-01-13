@@ -2,15 +2,22 @@ import { ArrowDown, Star, Award, CheckCircle2 } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-hero overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-hero overflow-hidden bg-dots">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 border border-primary/20 rounded-full" />
+      <div className="absolute top-40 right-20 w-20 h-20 border border-accent/20 rounded-full" />
+      <div className="absolute bottom-40 left-20 w-16 h-16 bg-primary/10 rounded-full" />
+      <div className="absolute top-1/3 right-10 w-1 h-32 bg-gradient-to-b from-primary/30 to-transparent" />
+      <div className="absolute bottom-1/3 left-10 w-1 h-32 bg-gradient-to-t from-accent/30 to-transparent" />
+      
       {/* Ambient glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
       
       <div className="container mx-auto px-6 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border mb-8">
+          <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border mb-8 shadow-card">
             <Award className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-muted-foreground">Top Rated on Upwork</span>
             <div className="flex items-center gap-0.5">
@@ -39,14 +46,14 @@ const HeroSection = () => {
           <div className="animate-fade-up-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <a 
               href="#contact" 
-              className="group px-8 py-4 bg-gradient-gold rounded-lg font-semibold text-primary-foreground hover-glow transition-all duration-300 flex items-center gap-2"
+              className="group px-8 py-4 bg-gradient-primary rounded-lg font-semibold text-primary-foreground hover-glow transition-all duration-300 flex items-center gap-2 shadow-warm"
             >
               Let's Work Together
               <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
             </a>
             <a 
               href="#experience" 
-              className="px-8 py-4 bg-secondary border border-border rounded-lg font-semibold text-foreground hover:bg-muted transition-all duration-300"
+              className="px-8 py-4 bg-card border border-border rounded-lg font-semibold text-foreground hover:bg-secondary transition-all duration-300 shadow-card"
             >
               View Experience
             </a>
@@ -62,7 +69,7 @@ const HeroSection = () => {
             ].map((stat, index) => (
               <div 
                 key={index}
-                className="p-4 rounded-xl bg-gradient-card border border-border hover-lift"
+                className="p-4 rounded-xl bg-card border border-border hover-lift shadow-card"
               >
                 <div className="text-2xl md:text-3xl font-bold text-gradient mb-1">{stat.value}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
