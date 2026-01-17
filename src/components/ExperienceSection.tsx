@@ -1,5 +1,5 @@
 import { Building2, Calendar, MapPin, ChevronRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 const experiences = [
   {
@@ -33,61 +33,123 @@ const experiences = [
 ];
 
 const ExperienceSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
       },
-      { threshold: 0.1 }
-    );
+    },
+  };
 
-    const reveals = sectionRef.current?.querySelectorAll(".reveal");
-    reveals?.forEach((el) => observer.observe(el));
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
 
-    return () => observer.disconnect();
-  }, []);
+  const timelineVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const lineVariants = {
+    hidden: { scaleY: 0 },
+    visible: {
+      scaleY: 1,
+      transition: {
+        duration: 1,
+        ease: "easeOut" as const,
+      },
+    },
+  };
 
   return (
-    <section id="experience" ref={sectionRef} className="py-24 bg-background relative bg-lines">
+    <section id="experience" className="py-24 bg-background relative bg-lines">
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-card text-primary text-sm font-medium mb-4 border border-border">
+        <motion.div 
+          className="text-center mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
+          <motion.span 
+            variants={itemVariants}
+            className="inline-block px-4 py-1.5 rounded-full bg-card text-primary text-sm font-medium mb-4 border border-border"
+          >
             Career Journey
-          </span>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+          </motion.span>
+          <motion.h2 
+            variants={itemVariants}
+            className="text-3xl md:text-5xl font-bold mb-4"
+          >
             Work <span className="text-gradient">Experience</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            variants={itemVariants}
+            className="text-muted-foreground max-w-2xl mx-auto"
+          >
             Building digital excellence through years of dedicated WordPress development
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Timeline */}
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline line */}
-          <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-1/2" />
+          <motion.div 
+            className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-1/2 origin-top"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={lineVariants}
+          />
 
           {experiences.map((exp, index) => (
-            <div 
+            <motion.div 
               key={index}
-              className={`reveal relative flex flex-col md:flex-row gap-8 mb-12 ${
+              className={`relative flex flex-col md:flex-row gap-8 mb-12 ${
                 index % 2 === 0 ? "md:flex-row-reverse" : ""
               }`}
-              style={{ transitionDelay: `${index * 0.2}s` }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={containerVariants}
             >
               {/* Timeline dot */}
-              <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full md:-translate-x-1/2 shadow-warm z-10" />
+              <motion.div 
+                className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full md:-translate-x-1/2 shadow-warm z-10"
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                viewport={{ once: true }}
+              />
               
               {/* Content */}
-              <div className={`ml-8 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-12" : "md:pl-12"}`}>
-                <div className="p-6 rounded-2xl bg-card border border-border hover-lift group shadow-card">
+              <motion.div 
+                className={`ml-8 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-12" : "md:pl-12"}`}
+                variants={timelineVariants}
+              >
+                <motion.div 
+                  className="p-6 rounded-2xl bg-card border border-border hover-lift group shadow-card"
+                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                >
                   <div className="flex items-center gap-2 text-primary mb-2">
                     <Building2 className="w-4 h-4" />
                     <span className="font-semibold">{exp.company}</span>
@@ -108,34 +170,67 @@ const ExperienceSection = () => {
 
                   <ul className="space-y-2">
                     {exp.responsibilities.slice(0, 3).map((resp, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <motion.li 
+                        key={i} 
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 * i }}
+                        viewport={{ once: true }}
+                      >
                         <ChevronRight className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                         {resp}
-                      </li>
+                      </motion.li>
                     ))}
                   </ul>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
 
         {/* Education */}
-        <div className="reveal max-w-4xl mx-auto mt-16">
-          <div className="p-8 rounded-2xl bg-card border border-border shadow-card">
+        <motion.div 
+          className="max-w-4xl mx-auto mt-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
+          <motion.div 
+            className="p-8 rounded-2xl bg-card border border-border shadow-card"
+            variants={itemVariants}
+            whileHover={{ y: -5, transition: { duration: 0.3 } }}
+          >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
-                <span className="text-primary font-medium">Education</span>
+                <motion.span 
+                  className="text-primary font-medium"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  Education
+                </motion.span>
                 <h3 className="text-2xl font-bold text-foreground mt-1">BSCS - Computer Science</h3>
                 <p className="text-muted-foreground mt-2">Government College University Faisalabad</p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gradient">3.03 / 4.00</div>
+                <motion.div 
+                  className="text-3xl font-bold text-gradient"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.3, type: "spring" }}
+                  viewport={{ once: true }}
+                >
+                  3.03 / 4.00
+                </motion.div>
                 <p className="text-muted-foreground">2017 - 2021</p>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

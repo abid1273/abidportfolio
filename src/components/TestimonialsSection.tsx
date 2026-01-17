@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 const testimonials = [
   {
@@ -46,32 +47,15 @@ const testimonials = [
 ];
 
 const TestimonialsSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const revealElements = sectionRef.current?.querySelectorAll(".reveal");
-    revealElements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
+      setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000);
 
@@ -80,105 +64,219 @@ const TestimonialsSection = () => {
 
   const goToPrevious = () => {
     setIsAutoPlaying(false);
+    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   const goToNext = () => {
     setIsAutoPlaying(false);
+    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.95,
+    }),
+  };
+
   return (
-    <section id="testimonials" ref={sectionRef} className="py-24 bg-background relative overflow-hidden bg-dots">
+    <section id="testimonials" className="py-24 bg-background relative overflow-hidden bg-dots">
       {/* Background decoration */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      <motion.div 
+        className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.5, 0.8, 0.5],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div 
+        className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"
+        animate={{ 
+          scale: [1.2, 1, 1.2],
+          opacity: [0.8, 0.5, 0.8],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <span className="reveal text-primary font-semibold tracking-wider uppercase text-sm">
+        <motion.div 
+          className="text-center mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
+          <motion.span 
+            variants={itemVariants}
+            className="text-primary font-semibold tracking-wider uppercase text-sm"
+          >
             Testimonials
-          </span>
-          <h2 className="reveal text-4xl md:text-5xl font-display font-bold mt-4 mb-6">
+          </motion.span>
+          <motion.h2 
+            variants={itemVariants}
+            className="text-4xl md:text-5xl font-display font-bold mt-4 mb-6"
+          >
             Client <span className="text-gradient">Success Stories</span>
-          </h2>
-          <p className="reveal text-muted-foreground max-w-2xl mx-auto text-lg">
+          </motion.h2>
+          <motion.p 
+            variants={itemVariants}
+            className="text-muted-foreground max-w-2xl mx-auto text-lg"
+          >
             Don't just take my word for it. Here's what my clients have to say about working with me.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className="reveal max-w-4xl mx-auto">
-          <div className="relative">
+        <motion.div 
+          className="max-w-4xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="relative">
             {/* Main testimonial card */}
-            <div className="bg-card rounded-3xl p-8 md:p-12 border border-border shadow-card relative">
+            <div className="bg-card rounded-3xl p-8 md:p-12 border border-border shadow-card relative overflow-hidden">
               <Quote className="absolute top-8 right-8 w-16 h-16 text-primary/10" />
 
-              <div className="flex items-center gap-4 mb-6">
-                <img
-                  src={testimonials[currentIndex].avatar}
-                  alt={testimonials[currentIndex].name}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-                />
-                <div>
-                  <h4 className="font-bold text-lg">{testimonials[currentIndex].name}</h4>
-                  <p className="text-muted-foreground text-sm">{testimonials[currentIndex].role}</p>
-                </div>
-                <div className="ml-auto flex gap-1">
-                  {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-primary fill-primary" />
-                  ))}
-                </div>
-              </div>
+              <AnimatePresence initial={false} custom={direction} mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 },
+                    scale: { duration: 0.2 },
+                  }}
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <motion.img
+                      src={testimonials[currentIndex].avatar}
+                      alt={testimonials[currentIndex].name}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.1 }}
+                    />
+                    <div>
+                      <h4 className="font-bold text-lg">{testimonials[currentIndex].name}</h4>
+                      <p className="text-muted-foreground text-sm">{testimonials[currentIndex].role}</p>
+                    </div>
+                    <div className="ml-auto flex gap-1">
+                      {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.2 + i * 0.05 }}
+                        >
+                          <Star className="w-5 h-5 text-primary fill-primary" />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
 
-              <blockquote className="text-lg md:text-xl leading-relaxed mb-6 text-foreground/90">
-                "{testimonials[currentIndex].content}"
-              </blockquote>
+                  <blockquote className="text-lg md:text-xl leading-relaxed mb-6 text-foreground/90">
+                    "{testimonials[currentIndex].content}"
+                  </blockquote>
 
-              <div className="flex items-center justify-between">
-                <span className="px-4 py-2 bg-primary/10 text-primary text-sm font-medium rounded-full">
-                  {testimonials[currentIndex].project}
-                </span>
+                  <div className="flex items-center justify-between">
+                    <motion.span 
+                      className="px-4 py-2 bg-primary/10 text-primary text-sm font-medium rounded-full"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      {testimonials[currentIndex].project}
+                    </motion.span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
 
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={goToPrevious}
-                    className="rounded-full"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={goToNext}
-                    className="rounded-full"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </div>
+              <div className="flex items-center justify-end gap-2 mt-6">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={goToPrevious}
+                  className="rounded-full"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={goToNext}
+                  className="rounded-full"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
               </div>
             </div>
 
             {/* Dots indicator */}
             <div className="flex justify-center gap-2 mt-8">
               {testimonials.map((_, index) => (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => {
                     setIsAutoPlaying(false);
+                    setDirection(index > currentIndex ? 1 : -1);
                     setCurrentIndex(index);
                   }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`h-2 rounded-full transition-all duration-300 ${
                     index === currentIndex
                       ? "w-8 bg-primary"
-                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                      : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                   }`}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
                 />
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
