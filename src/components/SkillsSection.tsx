@@ -1,18 +1,17 @@
-import { useEffect, useRef } from "react";
 import { 
   Code2, 
   Palette, 
   Zap, 
   Database, 
   Globe, 
-  Settings,
-  ShoppingCart,
   Server,
+  ShoppingCart,
   Plug,
   Gauge,
   Bug,
   Webhook
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const skillCategories = [
   {
@@ -52,7 +51,7 @@ const allSkills = [
   { name: "PHP", icon: Code2, level: 95 },
   { name: "JavaScript", icon: Code2, level: 90 },
   { name: "WooCommerce", icon: ShoppingCart, level: 95 },
-  { name: "Plugin Customization", icon: Settings, level: 92 },
+  { name: "Plugin Customization", icon: Palette, level: 92 },
   { name: "Theme Customization", icon: Palette, level: 94 },
   { name: "Speed Optimization", icon: Gauge, level: 90 },
   { name: "Bug Inspection", icon: Bug, level: 88 },
@@ -63,77 +62,153 @@ const allSkills = [
 ];
 
 const SkillsSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
       },
-      { threshold: 0.1 }
-    );
+    },
+  };
 
-    const reveals = sectionRef.current?.querySelectorAll(".reveal");
-    reveals?.forEach((el) => observer.observe(el));
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
 
-    return () => observer.disconnect();
-  }, []);
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.9, y: 30 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const tagVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
 
   return (
-    <section id="skills" ref={sectionRef} className="py-24 bg-card relative overflow-hidden bg-diagonal-lines">
+    <section id="skills" className="py-24 bg-card relative overflow-hidden bg-diagonal-lines">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-background text-primary text-sm font-medium mb-4 border border-border">
+        <motion.div 
+          className="text-center mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
+          <motion.span 
+            variants={itemVariants}
+            className="inline-block px-4 py-1.5 rounded-full bg-background text-primary text-sm font-medium mb-4 border border-border"
+          >
             Technical Expertise
-          </span>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+          </motion.span>
+          <motion.h2 
+            variants={itemVariants}
+            className="text-3xl md:text-5xl font-bold mb-4"
+          >
             Skills & <span className="text-gradient">Technologies</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            variants={itemVariants}
+            className="text-muted-foreground max-w-2xl mx-auto"
+          >
             Mastering the tools and technologies that power modern web development
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
           {skillCategories.map((category, index) => (
-            <div 
+            <motion.div 
               key={index}
-              className="reveal p-6 rounded-2xl bg-background border border-border hover-lift group shadow-card"
-              style={{ transitionDelay: `${index * 0.1}s` }}
+              variants={cardVariants}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="p-6 rounded-2xl bg-background border border-border hover-lift group shadow-card"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+              <motion.div 
+                className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
                 <category.icon className="w-6 h-6 text-primary" />
-              </div>
+              </motion.div>
               <h3 className="text-lg font-semibold text-foreground mb-3">{category.title}</h3>
-              <div className="flex flex-wrap gap-2">
+              <motion.div 
+                className="flex flex-wrap gap-2"
+                variants={containerVariants}
+              >
                 {category.skills.map((skill, i) => (
-                  <span 
+                  <motion.span 
                     key={i}
+                    variants={tagVariants}
+                    whileHover={{ scale: 1.05 }}
                     className="px-3 py-1 text-sm bg-card rounded-full text-muted-foreground border border-border"
                   >
                     {skill}
-                  </span>
+                  </motion.span>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Skill Bars */}
-        <div className="reveal max-w-4xl mx-auto">
-          <h3 className="text-2xl font-bold text-center mb-8">Proficiency Levels</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div 
+          className="max-w-4xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
+          <motion.h3 
+            variants={itemVariants}
+            className="text-2xl font-bold text-center mb-8"
+          >
+            Proficiency Levels
+          </motion.h3>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            variants={containerVariants}
+          >
             {allSkills.map((skill, index) => (
-              <div key={index} className="group">
+              <motion.div 
+                key={index} 
+                className="group"
+                variants={itemVariants}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <skill.icon className="w-4 h-4 text-primary" />
@@ -142,33 +217,49 @@ const SkillsSection = () => {
                   <span className="text-sm text-primary font-semibold">{skill.level}%</span>
                 </div>
                 <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-primary rounded-full transition-all duration-1000 ease-out"
-                    style={{ 
-                      width: `${skill.level}%`,
-                      transitionDelay: `${index * 0.1}s`
-                    }}
+                  <motion.div 
+                    className="h-full bg-gradient-primary rounded-full"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${skill.level}%` }}
+                    transition={{ duration: 1, delay: index * 0.05, ease: "easeOut" }}
+                    viewport={{ once: true }}
                   />
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Additional Skills Tags */}
-        <div className="reveal mt-16 text-center">
-          <p className="text-muted-foreground mb-6">Also experienced with</p>
-          <div className="flex flex-wrap justify-center gap-3">
+        <motion.div 
+          className="mt-16 text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
+          <motion.p 
+            variants={itemVariants}
+            className="text-muted-foreground mb-6"
+          >
+            Also experienced with
+          </motion.p>
+          <motion.div 
+            className="flex flex-wrap justify-center gap-3"
+            variants={containerVariants}
+          >
             {["Shopify", "Webflow", "GHL", "Automation", "GTM", "PSD to WordPress", "Figma to WordPress"].map((skill, index) => (
-              <span 
+              <motion.span 
                 key={index}
+                variants={tagVariants}
+                whileHover={{ scale: 1.1, y: -3 }}
                 className="px-4 py-2 rounded-full bg-background border border-border text-foreground hover:border-primary transition-colors cursor-default shadow-sm"
               >
                 {skill}
-              </span>
+              </motion.span>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

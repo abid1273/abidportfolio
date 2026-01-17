@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
 import { ExternalLink, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const projects = [
   {
@@ -48,58 +48,104 @@ const projects = [
 ];
 
 const PortfolioSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
       },
-      { threshold: 0.1 }
-    );
+    },
+  };
 
-    const revealElements = sectionRef.current?.querySelectorAll(".reveal");
-    revealElements?.forEach((el) => observer.observe(el));
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
 
-    return () => observer.disconnect();
-  }, []);
+  const cardVariants = {
+    hidden: { opacity: 0, y: 60, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const,
+      },
+    },
+  };
 
   return (
-    <section id="portfolio" ref={sectionRef} className="py-24 bg-card relative bg-wave-lines">
+    <section id="portfolio" className="py-24 bg-card relative bg-wave-lines">
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <span className="reveal text-primary font-semibold tracking-wider uppercase text-sm">
+        <motion.div 
+          className="text-center mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
+          <motion.span 
+            variants={itemVariants}
+            className="text-primary font-semibold tracking-wider uppercase text-sm"
+          >
             My Work
-          </span>
-          <h2 className="reveal text-4xl md:text-5xl font-display font-bold mt-4 mb-6">
+          </motion.span>
+          <motion.h2 
+            variants={itemVariants}
+            className="text-4xl md:text-5xl font-display font-bold mt-4 mb-6"
+          >
             Featured <span className="text-gradient">Projects</span>
-          </h2>
-          <p className="reveal text-muted-foreground max-w-2xl mx-auto text-lg">
+          </motion.h2>
+          <motion.p 
+            variants={itemVariants}
+            className="text-muted-foreground max-w-2xl mx-auto text-lg"
+          >
             A showcase of my best work across WordPress, WooCommerce, Shopify, and custom web development.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
           {projects.map((project, index) => (
-            <div
+            <motion.div
               key={project.title}
-              className="reveal group relative bg-background rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 shadow-card hover:shadow-warm"
-              style={{ transitionDelay: `${index * 100}ms` }}
+              variants={cardVariants}
+              whileHover={{ y: -12, transition: { duration: 0.3 } }}
+              className="group relative bg-background rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-500 shadow-card hover:shadow-warm"
             >
               <div className="relative h-48 overflow-hidden">
-                <img
+                <motion.img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                <span className="absolute top-4 left-4 px-3 py-1 bg-primary/90 backdrop-blur-sm text-primary-foreground text-xs font-semibold rounded-full">
+                <motion.span 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  viewport={{ once: true }}
+                  className="absolute top-4 left-4 px-3 py-1 bg-primary/90 backdrop-blur-sm text-primary-foreground text-xs font-semibold rounded-full"
+                >
                   {project.category}
-                </span>
+                </motion.span>
               </div>
 
               <div className="p-6">
@@ -121,7 +167,11 @@ const PortfolioSection = () => {
                   ))}
                 </div>
 
-                <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <motion.div 
+                  className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  initial={{ y: 10 }}
+                  whileHover={{ y: 0 }}
+                >
                   <Button size="sm" variant="outline" className="flex-1 gap-2">
                     <ExternalLink className="w-4 h-4" />
                     View
@@ -129,11 +179,11 @@ const PortfolioSection = () => {
                   <Button size="sm" variant="ghost" className="px-3">
                     <Github className="w-4 h-4" />
                   </Button>
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
