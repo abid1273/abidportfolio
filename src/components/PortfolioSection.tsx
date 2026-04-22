@@ -1,6 +1,8 @@
 import { ExternalLink, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const fallbackProjects = [
   {
