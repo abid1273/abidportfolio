@@ -9,7 +9,9 @@ import {
   Plug,
   Gauge,
   Bug,
-  Webhook
+  Webhook,
+  Bot,
+  Workflow
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -17,7 +19,7 @@ const skillCategories = [
   {
     title: "Core Development",
     icon: Code2,
-    skills: ["WordPress", "PHP", "JavaScript", "WooCommerce"]
+    skills: ["WordPress", "PHP", "JavaScript", "HTML", "CSS", "WooCommerce"]
   },
   {
     title: "Customization",
@@ -30,20 +32,35 @@ const skillCategories = [
     skills: ["WordPress Speed Optimization", "Bug Inspection", "WordPress Hooks"]
   },
   {
-    title: "Integration",
+    title: "Integration & APIs",
     icon: Plug,
-    skills: ["API Integration", "CRM Integration", "GTM", "Automation"]
+    skills: ["API Integration", "CRM Integration", "GTM", "Data Scraping"]
   },
   {
-    title: "Infrastructure",
-    icon: Server,
-    skills: ["Server Management", "GHL", "Security"]
+    title: "AI & Automation",
+    icon: Bot,
+    skills: ["n8n", "GoHighLevel", "Lovable", "AI Workflows", "Workflow Automation"]
   },
   {
     title: "Platforms",
     icon: Globe,
     skills: ["Shopify", "Webflow", "WordPress Multisite"]
   }
+];
+
+const allSkills = [
+  { name: "WordPress", icon: Globe, level: 98 },
+  { name: "PHP", icon: Code2, level: 95 },
+  { name: "JavaScript", icon: Code2, level: 90 },
+  { name: "WooCommerce", icon: ShoppingCart, level: 95 },
+  { name: "Plugin Customization", icon: Palette, level: 92 },
+  { name: "Theme Customization", icon: Palette, level: 94 },
+  { name: "Speed Optimization", icon: Gauge, level: 90 },
+  { name: "API Integration", icon: Plug, level: 90 },
+  { name: "GoHighLevel", icon: Database, level: 88 },
+  { name: "n8n / Automation", icon: Workflow, level: 85 },
+  { name: "AI Workflows", icon: Bot, level: 85 },
+  { name: "Server Management", icon: Server, level: 85 },
 ];
 
 const allSkills = [
