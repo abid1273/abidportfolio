@@ -1,27 +1,87 @@
 
 
-## Add Marquee Under Hero Buttons
+## Admin Dashboard with Authentication and Content Management
 
-### What
-Add an infinite scrolling marquee strip between the CTA buttons and the stats section in the hero, displaying technology/skill badges: WordPress, Shopify, WooCommerce, Webflow, PHP, JavaScript, GoHighLevel, n8n, Lovable, API Integrations, AI, CRM, Data Scraping.
+### Overview
+Add a secure admin system to manage Portfolio Projects and Client Reviews, with login, forgot password, and password reset flows. Uses Lovable Cloud for authentication and database storage.
 
-### How
+### Database Changes (3 migrations)
 
-**1. Update `src/components/HeroSection.tsx`**
-- Insert a marquee section after the CTA buttons `motion.div` (after line 144) and before the Stats grid
-- Each skill rendered as a pill/badge with `bg-card border border-border rounded-full px-4 py-2 text-sm font-medium text-foreground shadow-card` styling, consistent with the site's warm card aesthetic
-- Use a separator dot or subtle icon between items
-- Duplicate the items list twice inside a flex container for seamless infinite scroll
-- Wrap in a `motion.div` with `itemVariants` for entrance animation
-- Use `overflow-hidden` on the outer container and CSS animation on the inner flex row
+**Migration 1 — Portfolio projects table**
+- `portfolio_projects` table: id (uuid), title, category, description, image_url, tags (text[]), display_order (int), created_at, updated_at
+- RLS enabled: only authenticated users can CRUD; public can SELECT
 
-**2. Update `src/index.css` (or `tailwind.config.ts`)**
-- Add a `marquee` keyframe: `0% { transform: translateX(0) }` to `100% { transform: translateX(-50%) }` 
-- Add corresponding `animate-marquee` utility with ~25s linear infinite duration
+**Migration 2 — Client reviews table**
+- `client_reviews` table: id (uuid), name, role, avatar_url, content, rating (int), project, display_order (int), created_at, updated_at
+- RLS enabled: only authenticated users can CRUD; public can SELECT
 
-### Design Details
-- Badges use the existing warm card style (cream background, soft border, warm shadows)
-- Full width of the hero container, no overflow visible
-- Smooth, continuous left-scroll animation
-- Wrapped in a Framer Motion container so it fades in with the rest of the hero content
+**Migration 3 — User roles table**
+- `app_role` enum: admin, user
+- `user_roles` table with user_id referencing auth.users, role column
+- `has_role` security definer function
+- RLS policies using `has_role` for admin-only write access on both content tables
+
+### Auth Configuration
+- Enable email/password authentication (no auto-confirm — user must verify email)
+- Enable Google sign-in
+- Rate limiting on login attempts handled by Lovable Cloud's built-in auth
+
+### New Pages and Components
+
+**1. Footer update** (`src/components/Footer.tsx`)
+- Add small "Admin Login" text link in the footer bottom area
+
+**2. Auth page** (`src/pages/Auth.tsx`)
+- Route: `/auth`
+- Login form with email + password fields
+- "Forgot Password?" link below login button
+- Google sign-in button
+- On successful login, redirect to `/admin`
+
+**3. Reset password page** (`src/pages/ResetPassword.tsx`)
+- Route: `/reset-password`
+- Handles the recovery token from email link
+- New password + confirm password fields
+- On success, redirect to `/auth`
+
+**4. Admin dashboard** (`src/pages/Admin.tsx`)
+- Route: `/admin`
+- Protected: redirects to `/auth` if not authenticated or not admin
+- Clean panel with sidebar navigation (Portfolio, Reviews)
+- Header with user info and logout button
+
+**5. Portfolio management** (`src/components/admin/PortfolioManager.tsx`)
+- Table listing all projects with edit/delete actions
+- Add/Edit modal with form fields: title, category, description, image URL, tags
+- Drag or reorder by display_order
+
+**6. Reviews management** (`src/components/admin/ReviewsManager.tsx`)
+- Table listing all reviews with edit/delete actions
+- Add/Edit modal with form fields: name, role, avatar URL, content, rating, project name
+
+**7. Auth guard component** (`src/components/auth/AuthGuard.tsx`)
+- Wraps admin routes, checks authentication + admin role
+- Redirects unauthorized users
+
+### Route Updates (`src/App.tsx`)
+- `/auth` — Auth page
+- `/reset-password` — Reset password page
+- `/admin` — Admin dashboard (protected)
+
+### Frontend Data Integration
+- Update `PortfolioSection.tsx` to fetch projects from database (fallback to hardcoded data if empty)
+- Update `TestimonialsSection.tsx` to fetch reviews from database (fallback to hardcoded data if empty)
+
+### Security
+- Passwords hashed by Lovable Cloud auth (bcrypt)
+- Secure reset tokens with expiry (built-in)
+- RLS policies enforce admin-only write access
+- `has_role` security definer function prevents RLS recursion
+- Rate limiting on auth endpoints (built-in)
+
+### Technical Details
+- All database queries use the Supabase SDK client from `@/integrations/supabase/client`
+- React Query for data fetching and cache management
+- Framer Motion animations on admin panel consistent with site style
+- Responsive design matching the warm/inviting theme
 
