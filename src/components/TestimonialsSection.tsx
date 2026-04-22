@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-
-const testimonials = [
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+const fallbackTestimonials = [
   {
     name: "Sarah Johnson",
     role: "CEO, TechStart Inc.",
@@ -45,7 +46,6 @@ const testimonials = [
     project: "Speed Optimization",
   },
 ];
-
 const TestimonialsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
