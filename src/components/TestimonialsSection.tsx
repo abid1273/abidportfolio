@@ -47,6 +47,19 @@ const fallbackTestimonials = [
   },
 ];
 const TestimonialsSection = () => {
+  const { data: dbReviews } = useQuery({
+    queryKey: ["client-reviews"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("client_reviews").select("*").order("display_order");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const testimonials = dbReviews && dbReviews.length > 0
+    ? dbReviews.map((r) => ({ name: r.name, role: r.role, avatar: r.avatar_url, content: r.content, rating: r.rating, project: r.project }))
+    : fallbackTestimonials;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [direction, setDirection] = useState(0);
