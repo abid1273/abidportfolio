@@ -122,7 +122,7 @@ const HeroSection = () => {
           {/* CTA Buttons */}
           <motion.div 
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10"
           >
             <motion.a 
               href="#contact" 
@@ -141,6 +141,24 @@ const HeroSection = () => {
             >
               View Experience
             </motion.a>
+          </motion.div>
+
+          {/* Marquee */}
+          <motion.div variants={itemVariants} className="w-full overflow-hidden mb-16">
+            <div className="flex animate-marquee w-max gap-3">
+              {[...Array(2)].map((_, setIndex) => (
+                <div key={setIndex} className="flex gap-3">
+                  {["WordPress", "Shopify", "WooCommerce", "Webflow", "PHP", "JavaScript", "GoHighLevel", "n8n", "Lovable", "API Integrations", "AI", "CRM", "Data Scraping"].map((skill) => (
+                    <span
+                      key={`${setIndex}-${skill}`}
+                      className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-border text-sm font-medium text-foreground shadow-card whitespace-nowrap"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Stats */}
