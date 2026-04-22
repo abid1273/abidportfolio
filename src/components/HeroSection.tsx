@@ -1,4 +1,4 @@
-import { ArrowDown, Star, Award } from "lucide-react";
+import { ArrowDown, Star, CircleDot } from "lucide-react";
 import { motion } from "framer-motion";
 
 const HeroSection = () => {
@@ -87,8 +87,8 @@ const HeroSection = () => {
             variants={itemVariants}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border mb-8 shadow-card"
           >
-            <Award className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-muted-foreground">Top Rated on Upwork</span>
+            <CircleDot className="text-green-600 w-[20px] h-[20px]" />
+            <span className="text-muted-foreground font-semibold text-base">Available for projects</span>
             <div className="flex items-center gap-0.5">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-3 h-3 fill-primary text-primary" />
@@ -109,15 +109,14 @@ const HeroSection = () => {
             variants={itemVariants}
             className="text-xl md:text-2xl font-medium text-muted-foreground mb-4"
           >
-            Senior WordPress Developer
+            Senior Full Stack Web Developer
           </motion.p>
 
           <motion.p 
             variants={itemVariants}
             className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
           >
-            4+ years of expertise in WordPress, WooCommerce, Theme & Plugin Customization, 
-            API Integration, and Server Management. Building high-performance, scalable web solutions.
+            5+ years building scalable, high-performance digital solutions for startups and businesses worldwide. I specialize in WordPress, Shopify, WooCommerce, Webflow, and custom CMS — and extend beyond the browser to architect CRM systems and AI automation workflows that turn complex business processes into streamlined, intelligent systems.
           </motion.p>
 
           {/* CTA Buttons */}
