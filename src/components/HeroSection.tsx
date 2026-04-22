@@ -1,5 +1,87 @@
 import { ArrowDown, Star, CircleDot } from "lucide-react";
-// ... keep existing code
+import { motion } from "framer-motion";
+
+const HeroSection = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const statVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-hero overflow-hidden bg-dots">
+      {/* Decorative elements with animations */}
+      <motion.div 
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="absolute top-20 left-10 w-32 h-32 border border-primary/20 rounded-full" 
+      />
+      <motion.div 
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.7 }}
+        className="absolute top-40 right-20 w-20 h-20 border border-accent/20 rounded-full" 
+      />
+      <motion.div 
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.9 }}
+        className="absolute bottom-40 left-20 w-16 h-16 bg-primary/10 rounded-full" 
+      />
+      <motion.div 
+        initial={{ height: 0 }}
+        animate={{ height: 128 }}
+        transition={{ duration: 1, delay: 1.1 }}
+        className="absolute top-1/3 right-10 w-1 bg-gradient-to-b from-primary/30 to-transparent" 
+      />
+      <motion.div 
+        initial={{ height: 0 }}
+        animate={{ height: 128 }}
+        transition={{ duration: 1, delay: 1.3 }}
+        className="absolute bottom-1/3 left-10 w-1 bg-gradient-to-t from-accent/30 to-transparent" 
+      />
+      
+      {/* Ambient glow effects */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+      
+      <div className="container mx-auto px-6 py-20 relative z-10">
+        <motion.div 
+          className="max-w-4xl mx-auto text-center"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Badge */}
           <motion.div 
             variants={itemVariants}
@@ -8,7 +90,21 @@ import { ArrowDown, Star, CircleDot } from "lucide-react";
             <CircleDot className="text-green-600 w-[20px] h-[20px]" />
             <span className="text-muted-foreground font-semibold text-base">Available for projects</span>
             <div className="flex items-center gap-0.5">
-// ... keep existing code
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3 h-3 fill-primary text-primary" />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Main heading */}
+          <motion.h1 
+            variants={itemVariants}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
+          >
+            <span className="text-foreground">Muhammad</span>{" "}
+            <span className="text-gradient">Abid</span>
+          </motion.h1>
+          
           <motion.p 
             variants={itemVariants}
             className="text-xl md:text-2xl font-medium text-muted-foreground mb-4"
