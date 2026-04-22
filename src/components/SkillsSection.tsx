@@ -251,7 +251,7 @@ const SkillsSection = () => {
             className="flex flex-wrap justify-center gap-3"
             variants={containerVariants}
           >
-            {["Shopify", "Webflow", "GHL", "Automation", "GTM", "PSD to WordPress", "Figma to WordPress"].map((skill, index) => (
+            {["Shopify", "Webflow", "GoHighLevel", "n8n", "Lovable", "Data Scraping", "GTM", "PSD to WordPress", "Figma to WordPress"].map((skill, index) => (
               <motion.span 
                 key={index}
                 variants={tagVariants}
