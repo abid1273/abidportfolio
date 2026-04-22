@@ -2,7 +2,7 @@ import { ExternalLink, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-const projects = [
+const fallbackProjects = [
   {
     title: "E-Commerce Platform",
     category: "WooCommerce",
@@ -48,6 +48,19 @@ const projects = [
 ];
 
 const PortfolioSection = () => {
+  const { data: dbProjects } = useQuery({
+    queryKey: ["portfolio-projects"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("portfolio_projects").select("*").order("display_order");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const projects = dbProjects && dbProjects.length > 0
+    ? dbProjects.map((p) => ({ title: p.title, category: p.category, description: p.description, image: p.image_url, tags: p.tags || [] }))
+    : fallbackProjects;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
