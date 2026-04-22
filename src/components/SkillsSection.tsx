@@ -63,20 +63,6 @@ const allSkills = [
   { name: "Server Management", icon: Server, level: 85 },
 ];
 
-const allSkills = [
-  { name: "WordPress", icon: Globe, level: 98 },
-  { name: "PHP", icon: Code2, level: 95 },
-  { name: "JavaScript", icon: Code2, level: 90 },
-  { name: "WooCommerce", icon: ShoppingCart, level: 95 },
-  { name: "Plugin Customization", icon: Palette, level: 92 },
-  { name: "Theme Customization", icon: Palette, level: 94 },
-  { name: "Speed Optimization", icon: Gauge, level: 90 },
-  { name: "Bug Inspection", icon: Bug, level: 88 },
-  { name: "WordPress Hooks", icon: Webhook, level: 92 },
-  { name: "Server Management", icon: Server, level: 85 },
-  { name: "API Integration", icon: Plug, level: 90 },
-  { name: "CRM Integration", icon: Database, level: 88 },
-];
 
 const SkillsSection = () => {
   const containerVariants = {
