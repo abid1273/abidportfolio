@@ -248,7 +248,7 @@ const SkillsSection = () => {
             Also experienced with
           </motion.p>
           <motion.div 
-            className="flex flex-wrap justify-center gap-3"
+            className="flex flex-wrap justify-center items-center gap-3 max-w-3xl mx-auto"
             variants={containerVariants}
           >
             {["Shopify", "Webflow", "GoHighLevel", "n8n", "Lovable", "Data Scraping", "GTM", "PSD to WordPress", "Figma to WordPress"].map((skill, index) => (
