@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-
-const testimonials = [
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+const fallbackTestimonials = [
   {
     name: "Sarah Johnson",
     role: "CEO, TechStart Inc.",
@@ -45,8 +46,20 @@ const testimonials = [
     project: "Speed Optimization",
   },
 ];
-
 const TestimonialsSection = () => {
+  const { data: dbReviews } = useQuery({
+    queryKey: ["client-reviews"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("client_reviews").select("*").order("display_order");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const testimonials = dbReviews && dbReviews.length > 0
+    ? dbReviews.map((r) => ({ name: r.name, role: r.role, avatar: r.avatar_url, content: r.content, rating: r.rating, project: r.project }))
+    : fallbackTestimonials;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [direction, setDirection] = useState(0);
