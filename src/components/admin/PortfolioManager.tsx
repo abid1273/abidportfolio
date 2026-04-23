@@ -11,7 +11,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Upload, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, X, ExternalLink } from "lucide-react";
 
 interface Project {
   id: string;
@@ -21,13 +21,14 @@ interface Project {
   image_url: string;
   tags: string[];
   display_order: number;
+  live_project_link: string;
 }
 
 const PortfolioManager = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Project | null>(null);
   const [form, setForm] = useState({
-    title: "", category: "", description: "", tags: "", display_order: 0,
+    title: "", category: "", description: "", tags: "", display_order: 0, live_project_link: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -58,7 +59,7 @@ const PortfolioManager = () => {
   };
 
   const saveMutation = useMutation({
-    mutationFn: async (data: { id?: string; title: string; category: string; description: string; tags: string[]; display_order: number; image_url: string }) => {
+    mutationFn: async (data: Omit<Project, "id"> & { id?: string }) => {
       const payload = {
         title: data.title,
         category: data.category,
@@ -66,6 +67,7 @@ const PortfolioManager = () => {
         image_url: data.image_url,
         tags: data.tags,
         display_order: data.display_order,
+        live_project_link: data.live_project_link,
       };
       if (data.id) {
         const { error } = await supabase.from("portfolio_projects").update(payload).eq("id", data.id);
@@ -103,7 +105,7 @@ const PortfolioManager = () => {
 
   const openAdd = () => {
     setEditing(null);
-    setForm({ title: "", category: "", description: "", tags: "", display_order: projects.length });
+    setForm({ title: "", category: "", description: "", tags: "", display_order: projects.length, live_project_link: "" });
     setImageFile(null);
     setImagePreview("");
     setDialogOpen(true);
@@ -117,6 +119,7 @@ const PortfolioManager = () => {
       description: p.description,
       tags: p.tags.join(", "),
       display_order: p.display_order,
+      live_project_link: p.live_project_link || "",
     });
     setImageFile(null);
     setImagePreview(p.image_url || "");
@@ -147,6 +150,7 @@ const PortfolioManager = () => {
         image_url,
         tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
         display_order: form.display_order,
+        live_project_link: form.live_project_link,
       });
     } catch (err) {
       toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Failed to upload image", variant: "destructive" });
@@ -180,6 +184,7 @@ const PortfolioManager = () => {
                 <TableHead>Title</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Tags</TableHead>
+                <TableHead>Link</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -197,6 +202,15 @@ const PortfolioManager = () => {
                   <TableCell className="font-medium">{p.title}</TableCell>
                   <TableCell>{p.category}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{p.tags.join(", ")}</TableCell>
+                  <TableCell>
+                    {p.live_project_link ? (
+                      <a href={p.live_project_link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(p)}>
@@ -215,14 +229,15 @@ const PortfolioManager = () => {
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit Project" : "Add Project"}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-            <Input placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required />
-            <Textarea placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Category</label>
+              <Input placeholder="e.g. WooCommerce, Theme Development" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required />
+            </div>
 
             {/* Image Upload */}
             <div className="space-y-2">
@@ -257,8 +272,31 @@ const PortfolioManager = () => {
               )}
             </div>
 
-            <Input placeholder="Tags (comma separated)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
-            <Input type="number" placeholder="Display Order" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })} />
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Title</label>
+              <Input placeholder="Project title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Description</label>
+              <Textarea placeholder="Describe the project..." value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Tags (comma separated)</label>
+              <Input placeholder="WordPress, PHP, API" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Live Project Link</label>
+              <Input placeholder="https://example.com" value={form.live_project_link} onChange={(e) => setForm({ ...form, live_project_link: e.target.value })} />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Display Order</label>
+              <Input type="number" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })} />
+            </div>
+
             <DialogFooter>
               <Button type="submit" disabled={saveMutation.isPending || uploading}>
                 {uploading ? "Uploading..." : saveMutation.isPending ? "Saving..." : editing ? "Update" : "Add"}
