@@ -61,6 +61,7 @@ export type Database = {
           display_order: number
           id: string
           image_url: string
+          live_project_link: string
           tags: string[]
           title: string
           updated_at: string
@@ -72,6 +73,7 @@ export type Database = {
           display_order?: number
           id?: string
           image_url?: string
+          live_project_link?: string
           tags?: string[]
           title: string
           updated_at?: string
@@ -83,6 +85,7 @@ export type Database = {
           display_order?: number
           id?: string
           image_url?: string
+          live_project_link?: string
           tags?: string[]
           title?: string
           updated_at?: string

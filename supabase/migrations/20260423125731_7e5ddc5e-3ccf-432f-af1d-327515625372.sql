@@ -1,0 +1,1 @@
+ALTER TABLE public.portfolio_projects ADD COLUMN live_project_link text NOT NULL DEFAULT '';
