@@ -57,8 +57,8 @@ const TestimonialsSection = () => {
   });
 
   const testimonials = dbReviews && dbReviews.length > 0
-    ? dbReviews.map((r) => ({ name: r.name, role: r.role, avatar: r.avatar_url, content: r.content, rating: r.rating, project: r.project }))
-    : fallbackTestimonials;
+    ? dbReviews.map((r) => ({ name: r.name, role: r.role, avatar: r.avatar_url, content: r.content, rating: r.rating, project: r.project, tags: (r as { tags?: string[] }).tags || [] }))
+    : fallbackTestimonials.map((t) => ({ ...t, tags: [] as string[] }));
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -205,14 +205,25 @@ const TestimonialsSection = () => {
                   }}
                 >
                   <div className="flex items-center gap-4 mb-6">
-                    <motion.img
-                      src={testimonials[currentIndex].avatar}
-                      alt={testimonials[currentIndex].name}
-                      className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.1 }}
-                    />
+                    {testimonials[currentIndex].avatar ? (
+                      <motion.img
+                        src={testimonials[currentIndex].avatar}
+                        alt={testimonials[currentIndex].name}
+                        className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      />
+                    ) : (
+                      <motion.div
+                        className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl font-bold uppercase border-2 border-primary"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        {testimonials[currentIndex].name.charAt(0)}
+                      </motion.div>
+                    )}
                     <div>
                       <h4 className="font-bold text-lg">{testimonials[currentIndex].name}</h4>
                       <p className="text-muted-foreground text-sm">{testimonials[currentIndex].role}</p>
@@ -235,16 +246,21 @@ const TestimonialsSection = () => {
                     "{testimonials[currentIndex].content}"
                   </blockquote>
 
-                  <div className="flex items-center justify-between">
-                    <motion.span 
-                      className="px-4 py-2 bg-primary/10 text-primary text-sm font-medium rounded-full"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      {testimonials[currentIndex].project}
-                    </motion.span>
-                  </div>
+                  {testimonials[currentIndex].tags && testimonials[currentIndex].tags.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      {testimonials[currentIndex].tags.map((tag, i) => (
+                        <motion.span
+                          key={tag}
+                          className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.3 + i * 0.05 }}
+                        >
+                          {tag}
+                        </motion.span>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               </AnimatePresence>
 
