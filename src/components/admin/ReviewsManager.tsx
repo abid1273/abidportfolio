@@ -22,13 +22,14 @@ interface Review {
   rating: number;
   project: string;
   display_order: number;
+  tags: string[];
 }
 
 const ReviewsManager = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Review | null>(null);
   const [form, setForm] = useState({
-    name: "", role: "", content: "", rating: 5, project: "", display_order: 0,
+    name: "", role: "", content: "", rating: 5, project: "", display_order: 0, tags: "",
   });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
@@ -59,7 +60,7 @@ const ReviewsManager = () => {
   };
 
   const saveMutation = useMutation({
-    mutationFn: async (data: { id?: string; name: string; role: string; avatar_url: string; content: string; rating: number; project: string; display_order: number }) => {
+    mutationFn: async (data: { id?: string; name: string; role: string; avatar_url: string; content: string; rating: number; project: string; display_order: number; tags: string[] }) => {
       const payload = {
         name: data.name,
         role: data.role,
@@ -68,6 +69,7 @@ const ReviewsManager = () => {
         rating: data.rating,
         project: data.project,
         display_order: data.display_order,
+        tags: data.tags,
       };
       if (data.id) {
         const { error } = await supabase.from("client_reviews").update(payload).eq("id", data.id);
@@ -105,7 +107,7 @@ const ReviewsManager = () => {
 
   const openAdd = () => {
     setEditing(null);
-    setForm({ name: "", role: "", content: "", rating: 5, project: "", display_order: reviews.length });
+    setForm({ name: "", role: "", content: "", rating: 5, project: "", display_order: reviews.length, tags: "" });
     setAvatarFile(null);
     setAvatarPreview("");
     setDialogOpen(true);
@@ -120,6 +122,7 @@ const ReviewsManager = () => {
       rating: r.rating,
       project: r.project,
       display_order: r.display_order,
+      tags: (r.tags || []).join(", "),
     });
     setAvatarFile(null);
     setAvatarPreview(r.avatar_url || "");
@@ -138,13 +141,23 @@ const ReviewsManager = () => {
     e.preventDefault();
     setUploading(true);
     try {
-      let avatar_url = editing?.avatar_url || "";
+      let avatar_url = avatarPreview && !avatarFile ? avatarPreview : "";
       if (avatarFile) {
         avatar_url = await uploadAvatar(avatarFile);
       }
+      const tagsArr = form.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
       saveMutation.mutate({
         id: editing?.id,
-        ...form,
+        name: form.name,
+        role: form.role,
+        content: form.content,
+        rating: form.rating,
+        project: form.project,
+        display_order: form.display_order,
+        tags: tagsArr,
         avatar_url,
       });
     } catch (err) {
@@ -179,7 +192,7 @@ const ReviewsManager = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Rating</TableHead>
-                <TableHead>Project</TableHead>
+                <TableHead>Tags</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -191,7 +204,7 @@ const ReviewsManager = () => {
                     {r.avatar_url ? (
                       <img src={r.avatar_url} alt={r.name} className="w-10 h-10 rounded-full object-cover" />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold uppercase">
                         {r.name.charAt(0)}
                       </div>
                     )}
@@ -205,7 +218,9 @@ const ReviewsManager = () => {
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell>{r.project}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {(r.tags || []).join(", ")}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(r)}>
@@ -229,12 +244,19 @@ const ReviewsManager = () => {
             <DialogTitle>{editing ? "Edit Review" : "Add Review"}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input placeholder="Client Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <Input placeholder="Role / Company" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Client Name *</label>
+              <Input placeholder="e.g. Sarah Johnson" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Designation</label>
+              <Input placeholder="e.g. CEO, TechStart Inc." value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
+            </div>
 
             {/* Avatar Upload */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Client Avatar</label>
+              <label className="text-sm font-medium">Client Image (optional)</label>
+              <p className="text-xs text-muted-foreground">If no image, the first letter of the name will be used as the avatar.</p>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -255,8 +277,8 @@ const ReviewsManager = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground text-xs">
-                    No photo
+                  <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl font-bold uppercase">
+                    {form.name.charAt(0) || "?"}
                   </div>
                 )}
                 <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => fileInputRef.current?.click()}>
@@ -265,12 +287,27 @@ const ReviewsManager = () => {
               </div>
             </div>
 
-            <Textarea placeholder="Review content" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required />
-            <div className="flex gap-4">
-              <Input type="number" placeholder="Rating (1-5)" min={1} max={5} value={form.rating} onChange={(e) => setForm({ ...form, rating: parseInt(e.target.value) || 5 })} />
-              <Input placeholder="Project name" value={form.project} onChange={(e) => setForm({ ...form, project: e.target.value })} />
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Review Text *</label>
+              <Textarea placeholder="What did the client say?" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required rows={4} />
             </div>
-            <Input type="number" placeholder="Display Order" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })} />
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Tags (optional)</label>
+              <Input placeholder="comma separated, e.g. WordPress, Speed, Support" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Rating (1-5)</label>
+                <Input type="number" min={1} max={5} value={form.rating} onChange={(e) => setForm({ ...form, rating: parseInt(e.target.value) || 5 })} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Display Order</label>
+                <Input type="number" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })} />
+              </div>
+            </div>
+
             <DialogFooter>
               <Button type="submit" disabled={saveMutation.isPending || uploading}>
                 {uploading ? "Uploading..." : saveMutation.isPending ? "Saving..." : editing ? "Update" : "Add"}

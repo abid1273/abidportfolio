@@ -25,6 +25,7 @@ export type Database = {
           project: string
           rating: number
           role: string
+          tags: string[]
           updated_at: string
         }
         Insert: {
@@ -37,6 +38,7 @@ export type Database = {
           project?: string
           rating?: number
           role?: string
+          tags?: string[]
           updated_at?: string
         }
         Update: {
@@ -49,6 +51,7 @@ export type Database = {
           project?: string
           rating?: number
           role?: string
+          tags?: string[]
           updated_at?: string
         }
         Relationships: []
