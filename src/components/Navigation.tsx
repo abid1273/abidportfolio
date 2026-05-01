@@ -16,7 +16,6 @@ const Navigation = () => {
   const navItems = [
     { label: "About", href: "#about" },
     { label: "Upwork", href: "#upwork" },
-    { label: "Experience", href: "#experience" },
     { label: "Skills", href: "#skills" },
     { label: "Contact", href: "#contact" },
   ];

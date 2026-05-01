@@ -113,7 +113,7 @@ const SkillsSection = () => {
   };
 
   return (
-    <section id="skills" className="py-24 bg-card relative overflow-hidden bg-diagonal-lines">
+    <section id="skills" className="py-24 bg-background relative overflow-hidden bg-lines">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
       

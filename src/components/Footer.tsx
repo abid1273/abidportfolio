@@ -1,4 +1,3 @@
-import { Heart } from "lucide-react";
 import SocialLinks from "./SocialLinks";
 
 const Footer = () => {
@@ -17,7 +16,7 @@ const Footer = () => {
           </div>
           
           <nav className="flex items-center justify-center gap-6">
-            {["About", "Portfolio", "Experience", "Skills", "Contact"].map((item) => (
+            {["About", "Portfolio", "Skills", "Contact"].map((item) => (
               <a 
                 key={item}
                 href={`#${item.toLowerCase()}`}
@@ -30,17 +29,12 @@ const Footer = () => {
 
           <div className="flex flex-col items-center md:items-end gap-4">
             <SocialLinks />
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-muted-foreground flex items-center gap-1">
-                Made with <Heart className="w-4 h-4 text-primary fill-primary" /> © 2024
-              </p>
-              <a
-                href="/auth"
-                className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
-              >
-                Admin Login
-              </a>
-            </div>
+            <a
+              href="/auth"
+              className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              Admin Login
+            </a>
           </div>
         </div>
       </div>
