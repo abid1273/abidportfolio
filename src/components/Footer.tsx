@@ -16,7 +16,7 @@ const Footer = () => {
           </div>
           
           <nav className="flex items-center justify-center gap-6">
-            {["About", "Portfolio", "Experience", "Skills", "Contact"].map((item) => (
+            {["About", "Portfolio", "Skills", "Contact"].map((item) => (
               <a 
                 key={item}
                 href={`#${item.toLowerCase()}`}
