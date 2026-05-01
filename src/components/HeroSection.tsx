@@ -134,12 +134,12 @@ const HeroSection = () => {
               <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
             </motion.a>
             <motion.a 
-              href="#experience" 
+              href="#skills" 
               className="px-8 py-4 bg-card border border-border rounded-lg font-semibold text-foreground hover:bg-secondary transition-all duration-300 shadow-card"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              View Experience
+              View Skills
             </motion.a>
           </motion.div>
 
